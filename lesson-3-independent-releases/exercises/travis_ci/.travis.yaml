@@ -1,0 +1,24 @@
+# 1 - Language section
+language: node_js
+node_js:
+  - 13
+
+# 2 - Scripts section
+services:
+  - docker
+
+# 3 - before_script section
+# Pre-testing installs
+install:
+  - echo "no tests"
+
+# 4 - script section
+scripts:
+  - docker --version # print the version for logging
+  - docker build -t simple-node .
+  - docker tag simple-node komni/simple-node:latest
+
+# Tasks to perform after the process is successful
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push komni/simple-node
